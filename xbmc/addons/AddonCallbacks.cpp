@@ -21,6 +21,7 @@
 #include "Addon.h"
 #include "AddonCallbacks.h"
 #include "AddonCallbacksAddon.h"
+#include "AddonCallbacksAudioEngine.h"
 #include "AddonCallbacksCodec.h"
 #include "AddonCallbacksGUI.h"
 #include "AddonCallbacksPeripheral.h"
@@ -37,6 +38,7 @@ CAddonCallbacks::CAddonCallbacks(CAddon* addon)
   m_addon       = addon;
   m_callbacks   = new AddonCB;
   m_helperAddon = NULL;
+  m_helperAudioEngine = NULL;
   m_helperGUI   = NULL;
   m_helperPeripheral = NULL;
   m_helperPVR   = NULL;
@@ -47,6 +49,8 @@ CAddonCallbacks::CAddonCallbacks(CAddon* addon)
   m_callbacks->addonData             = this;
   m_callbacks->AddOnLib_RegisterMe   = CAddonCallbacks::AddOnLib_RegisterMe;
   m_callbacks->AddOnLib_UnRegisterMe = CAddonCallbacks::AddOnLib_UnRegisterMe;
+  m_callbacks->AudioEngineLib_RegisterMe    = CAddonCallbacks::AudioEngineLib_RegisterMe;
+  m_callbacks->AudioEngineLib_UnRegisterMe  = CAddonCallbacks::AudioEngineLib_UnRegisterMe;
   m_callbacks->CODECLib_RegisterMe   = CAddonCallbacks::CODECLib_RegisterMe;
   m_callbacks->CODECLib_UnRegisterMe = CAddonCallbacks::CODECLib_UnRegisterMe;
   m_callbacks->GUILib_RegisterMe     = CAddonCallbacks::GUILib_RegisterMe;
@@ -63,6 +67,8 @@ CAddonCallbacks::~CAddonCallbacks()
 {
   delete m_helperAddon;
   m_helperAddon = NULL;
+  delete m_helperAudioEngine;
+  m_helperAudioEngine = NULL;
   delete m_helperCODEC;
   m_helperCODEC = NULL;
   delete m_helperGUI;
@@ -128,6 +134,32 @@ void CAddonCallbacks::CODECLib_UnRegisterMe(void *addonData, CB_CODECLib *cbTabl
 
   delete addon->m_helperCODEC;
   addon->m_helperCODEC = NULL;
+}
+
+CB_AudioEngineLib* CAddonCallbacks::AudioEngineLib_RegisterMe(void *addonData)
+{
+  CAddonCallbacks* addon = (CAddonCallbacks*) addonData;
+  if (addon == NULL)
+  {
+    CLog::Log(LOGERROR, "CAddonCallbacks - %s - called with a null pointer", __FUNCTION__);
+    return NULL;
+  }
+
+  addon->m_helperAudioEngine = new CAddonCallbacksAudioEngine(addon->m_addon);
+  return addon->m_helperAudioEngine->GetCallbacks();
+}
+
+void CAddonCallbacks::AudioEngineLib_UnRegisterMe(void *addonData, CB_AudioEngineLib *cbTable)
+{
+  CAddonCallbacks* addon = (CAddonCallbacks*) addonData;
+  if (addon == NULL)
+  {
+    CLog::Log(LOGERROR, "CAddonCallbacks - %s - called with a null pointer", __FUNCTION__);
+    return;
+  }
+
+  delete addon->m_helperAudioEngine;
+  addon->m_helperAudioEngine = NULL;
 }
 
 CB_GUILib* CAddonCallbacks::GUILib_RegisterMe(void *addonData)
