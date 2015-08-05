@@ -172,6 +172,7 @@
     <ClCompile Include="..\..\lib\SlingboxLib\SlingboxLib.cpp" />
     <ClCompile Include="..\..\xbmc\addons\AddonCallbacks.cpp" />
     <ClCompile Include="..\..\xbmc\addons\AddonCallbacksAddon.cpp" />
+    <ClCompile Include="..\..\xbmc\addons\AddonCallbacksAudioEngine.cpp" />
     <ClCompile Include="..\..\xbmc\addons\AddonCallbacksCodec.cpp" />
     <ClCompile Include="..\..\xbmc\addons\AddonCallbacksGame.cpp" />
     <ClCompile Include="..\..\xbmc\addons\AddonCallbacksGUI.cpp" />
@@ -871,6 +872,7 @@
     <ClCompile Include="..\..\xbmc\TextureCacheJob.cpp" />
     <ClCompile Include="..\..\xbmc\TextureDatabase.cpp" />
     <ClCompile Include="..\..\xbmc\DatabaseManager.cpp" />
+    <ClInclude Include="..\..\xbmc\addons\AddonCallbacksAudioEngine.h" />
     <ClInclude Include="..\..\xbmc\addons\AddonCallbacksCodec.h" />
     <ClInclude Include="..\..\xbmc\addons\AddonCallbacksGame.h" />
     <ClInclude Include="..\..\xbmc\addons\AddonCallbacksPeripheral.h" />
@@ -887,6 +889,7 @@
     <ClInclude Include="..\..\xbmc\contrib\kissfft\kiss_fft.h" />
     <ClInclude Include="..\..\xbmc\contrib\kissfft\kiss_fftr.h" />
     <ClInclude Include="..\..\xbmc\contrib\kissfft\_kiss_fft_guts.h" />
+    <ClInclude Include="..\..\xbmc\cores\AudioEngine\Utils\AEStreamData.h" />
     <ClInclude Include="..\..\xbmc\cores\DataCacheCore.h" />
     <ClInclude Include="..\..\xbmc\cores\AudioEngine\AEFactory.h" />
     <ClInclude Include="..\..\xbmc\cores\AudioEngine\AEResampleFactory.h" />

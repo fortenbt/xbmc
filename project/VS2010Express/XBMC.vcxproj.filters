@@ -3262,6 +3262,9 @@
     <ClCompile Include="..\..\xbmc\cores\RetroPlayer\RetroPlayerVideo.cpp">
       <Filter>cores\RetroPlayer</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\xbmc\addons\AddonCallbacksAudioEngine.cpp">
+      <Filter>addons</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\xbmc\games\windows\GUIViewStateWindowGames.cpp">
       <Filter>games\windows</Filter>
     </ClCompile>
@@ -6335,6 +6338,12 @@
     <ClInclude Include="..\..\xbmc\games\ControllerTypes.h">
       <Filter>games</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\xbmc\addons\AddonCallbacksAudioEngine.h">
+      <Filter>addons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\cores\AudioEngine\Utils\AEStreamData.h">
+      <Filter>cores\AudioEngine\Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\xbmc\win32\XBMC_PC.rc">
@@ -6379,5 +6388,46 @@
     <CustomBuild Include="..\..\xbmc\interfaces\swig\AddonModuleXbmcwsgi.i">
       <Filter>interfaces\swig</Filter>
     </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\..\system\shaders\guishader_vert.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\system\shaders\guishader_video_control.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\system\shaders\guishader_video.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\system\shaders\guishader_texture_noblend.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\system\shaders\guishader_texture.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\system\shaders\guishader_multi_texture_blend.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\system\shaders\guishader_interlaced_right.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\system\shaders\guishader_interlaced_left.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\system\shaders\guishader_fonts.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\system\shaders\guishader_default.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\system\shaders\guishader_checkerboard_right.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\system\shaders\guishader_checkerboard_left.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\system\shaders\guishader_common.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

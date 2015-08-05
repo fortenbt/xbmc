@@ -158,6 +158,8 @@ config.log
 /lib/addons/library.xbmc.codec/project/VS2010Express/Debug
 /lib/addons/library.xbmc.pvr/project/VS2010Express/Release
 /lib/addons/library.xbmc.pvr/project/VS2010Express/Debug
+/lib/addons/library.kodi.audioengine/project/VS2010Express/Release/
+/lib/addons/library.kodi.audioengine/project/VS2010Express/Debug/
 /lib/addons/library.kodi.game/project/VS2010Express/Release
 /lib/addons/library.kodi.game/project/VS2010Express/Debug
 /lib/addons/library.kodi.peripheral/project/VS2010Express/Release
@@ -935,6 +937,8 @@ lib/cpluff/stamp-h1
 /addons/library.kodi.guilib/libKODI_guilib.lib
 /addons/library.xbmc.pvr/libXBMC_pvr.dll
 /addons/library.xbmc.pvr/libXBMC_pvr.lib
+/addons/library.kodi.audioengine/libKODI_audioengine.dll
+/addons/library.kodi.audioengine/libKODI_audioengine.lib
 /addons/library.kodi.game/libKODI_game.dll
 /addons/library.kodi.game/libKODI_game.lib
 /addons/library.kodi.peripheral/libKODI_peripheral.dll
