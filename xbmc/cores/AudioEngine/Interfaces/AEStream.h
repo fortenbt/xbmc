@@ -20,18 +20,9 @@
  */
 
 #include "cores/AudioEngine/Utils/AEAudioFormat.h"
+#include "cores/AudioEngine/Utils/AEStreamData.h"
 #include "cores/IAudioCallback.h"
 #include <stdint.h>
-
-/**
- * Bit options to pass to IAE::GetStream
- */
-enum AEStreamOptions
-{
-  AESTREAM_FORCE_RESAMPLE = 0x01, /* force resample even if rates match */
-  AESTREAM_PAUSED         = 0x02, /* create the stream paused */
-  AESTREAM_AUTOSTART      = 0x04  /* autostart the stream when enough data is buffered */
-};
 
 /**
  * IAEStream Stream Interface for streaming audio
@@ -239,5 +230,10 @@ public:
    * Sginal a clock change
    */
   virtual void Discontinuity() = 0;
+
+  /**
+   * Indicates if dsp addon system is active.
+   */
+  virtual bool HasDSP() = 0;
 };
 
