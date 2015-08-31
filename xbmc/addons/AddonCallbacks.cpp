@@ -22,9 +22,9 @@
 #include "AddonCallbacks.h"
 #include "AddonCallbacksAddon.h"
 #include "AddonCallbacksAudioDSP.h"
-#include "AddonCallbacksInterfaces.h"
 #include "AddonCallbacksCodec.h"
 #include "AddonCallbacksGUI.h"
+#include "AddonCallbacksInterfaces.h"
 #include "AddonCallbacksPVR.h"
 #include "filesystem/SpecialProtocol.h"
 #include "utils/log.h"
@@ -34,29 +34,29 @@ namespace ADDON
 
 CAddonCallbacks::CAddonCallbacks(CAddon* addon)
 {
-  m_addon             = addon;
-  m_callbacks         = new AddonCB;
-  m_helperAddon       = NULL;
-  m_helperADSP        = NULL;
+  m_addon       = addon;
+  m_callbacks   = new AddonCB;
+  m_helperAddon = NULL;
+  m_helperADSP  = NULL;
+  m_helperGUI   = NULL;
   m_helperInterfaces  = NULL;
-  m_helperGUI         = NULL;
-  m_helperPVR         = NULL;
-  m_helperCODEC       = NULL;
+  m_helperPVR   = NULL;
+  m_helperCODEC = NULL;
 
-  m_callbacks->libBasePath                  = strdup(CSpecialProtocol::TranslatePath("special://xbmcbin/addons").c_str());
-  m_callbacks->addonData                    = this;
-  m_callbacks->AddOnLib_RegisterMe          = CAddonCallbacks::AddOnLib_RegisterMe;
-  m_callbacks->AddOnLib_UnRegisterMe        = CAddonCallbacks::AddOnLib_UnRegisterMe;
-  m_callbacks->ADSPLib_RegisterMe           = CAddonCallbacks::ADSPLib_RegisterMe;
-  m_callbacks->ADSPLib_UnRegisterMe         = CAddonCallbacks::ADSPLib_UnRegisterMe;
+  m_callbacks->libBasePath           = strdup(CSpecialProtocol::TranslatePath("special://xbmcbin/addons").c_str());
+  m_callbacks->addonData             = this;
+  m_callbacks->AddOnLib_RegisterMe   = CAddonCallbacks::AddOnLib_RegisterMe;
+  m_callbacks->AddOnLib_UnRegisterMe = CAddonCallbacks::AddOnLib_UnRegisterMe;
+  m_callbacks->ADSPLib_RegisterMe    = CAddonCallbacks::ADSPLib_RegisterMe;
+  m_callbacks->ADSPLib_UnRegisterMe  = CAddonCallbacks::ADSPLib_UnRegisterMe;
+  m_callbacks->CODECLib_RegisterMe   = CAddonCallbacks::CODECLib_RegisterMe;
+  m_callbacks->CODECLib_UnRegisterMe = CAddonCallbacks::CODECLib_UnRegisterMe;
+  m_callbacks->GUILib_RegisterMe     = CAddonCallbacks::GUILib_RegisterMe;
+  m_callbacks->GUILib_UnRegisterMe   = CAddonCallbacks::GUILib_UnRegisterMe;
   m_callbacks->InterfacesLib_RegisterMe     = CAddonCallbacks::InterfacesLib_RegisterMe;
   m_callbacks->InterfacesLib_UnRegisterMe   = CAddonCallbacks::InterfacesLib_UnRegisterMe;
-  m_callbacks->CODECLib_RegisterMe          = CAddonCallbacks::CODECLib_RegisterMe;
-  m_callbacks->CODECLib_UnRegisterMe        = CAddonCallbacks::CODECLib_UnRegisterMe;
-  m_callbacks->GUILib_RegisterMe            = CAddonCallbacks::GUILib_RegisterMe;
-  m_callbacks->GUILib_UnRegisterMe          = CAddonCallbacks::GUILib_UnRegisterMe;
-  m_callbacks->PVRLib_RegisterMe            = CAddonCallbacks::PVRLib_RegisterMe;
-  m_callbacks->PVRLib_UnRegisterMe          = CAddonCallbacks::PVRLib_UnRegisterMe;
+  m_callbacks->PVRLib_RegisterMe     = CAddonCallbacks::PVRLib_RegisterMe;
+  m_callbacks->PVRLib_UnRegisterMe   = CAddonCallbacks::PVRLib_UnRegisterMe;
 }
 
 CAddonCallbacks::~CAddonCallbacks()
@@ -65,13 +65,13 @@ CAddonCallbacks::~CAddonCallbacks()
   m_helperAddon = NULL;
   delete m_helperADSP;
   m_helperADSP = NULL;
-  delete m_helperInterfaces;
-  m_helperInterfaces = NULL;
   delete m_helperCODEC;
   m_helperCODEC = NULL;
   delete m_helperGUI;
   m_helperGUI = NULL;
   delete m_helperPVR;
+  delete m_helperInterfaces;
+  m_helperInterfaces = NULL;
   m_helperPVR = NULL;
   free((char*)m_callbacks->libBasePath);
   delete m_callbacks;
@@ -130,34 +130,6 @@ void CAddonCallbacks::ADSPLib_UnRegisterMe(void *addonData, CB_ADSPLib *cbTable)
   addon->m_helperADSP = NULL;
 }
 
-
-CB_InterfacesLib* CAddonCallbacks::InterfacesLib_RegisterMe(void *addonData)
-{
-  CAddonCallbacks* addon = (CAddonCallbacks*) addonData;
-  if(addon == NULL)
-  {
-    CLog::Log(LOGERROR, "CAddonCallbacks - %s - called with a null pointer", __FUNCTION__);
-    return NULL;
-  }
-
-  addon->m_helperInterfaces = new CAddonCallbacksInterfaces(addon->m_addon);
-  return addon->m_helperInterfaces->GetCallbacks();
-}
-
-void CAddonCallbacks::InterfacesLib_UnRegisterMe(void *addonData, CB_InterfacesLib *cbTable)
-{
-  CAddonCallbacks* addon = (CAddonCallbacks*) addonData;
-  if(addon == NULL)
-  {
-    CLog::Log(LOGERROR, "CAddonCallbacks - %s - called with a null pointer", __FUNCTION__);
-    return;
-  }
-
-  delete addon->m_helperInterfaces;
-  addon->m_helperInterfaces = NULL;
-}
-
-
 CB_CODECLib* CAddonCallbacks::CODECLib_RegisterMe(void *addonData)
 {
   CAddonCallbacks* addon = (CAddonCallbacks*) addonData;
@@ -208,6 +180,32 @@ void CAddonCallbacks::GUILib_UnRegisterMe(void *addonData, CB_GUILib *cbTable)
 
   delete addon->m_helperGUI;
   addon->m_helperGUI = NULL;
+}
+
+CB_InterfacesLib* CAddonCallbacks::InterfacesLib_RegisterMe(void *addonData)
+{
+  CAddonCallbacks* addon = (CAddonCallbacks*) addonData;
+  if(addon == NULL)
+  {
+    CLog::Log(LOGERROR, "CAddonCallbacks - %s - called with a null pointer", __FUNCTION__);
+    return NULL;
+  }
+
+  addon->m_helperInterfaces = new CAddonCallbacksInterfaces(addon->m_addon);
+  return addon->m_helperInterfaces->GetCallbacks();
+}
+
+void CAddonCallbacks::InterfacesLib_UnRegisterMe(void *addonData, CB_InterfacesLib *cbTable)
+{
+  CAddonCallbacks* addon = (CAddonCallbacks*) addonData;
+  if(addon == NULL)
+  {
+    CLog::Log(LOGERROR, "CAddonCallbacks - %s - called with a null pointer", __FUNCTION__);
+    return;
+  }
+
+  delete addon->m_helperInterfaces;
+  addon->m_helperInterfaces = NULL;
 }
 
 CB_PVRLib* CAddonCallbacks::PVRLib_RegisterMe(void *addonData)

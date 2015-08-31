@@ -398,7 +398,6 @@ typedef struct CB_ADSPLib
   ADSPSoundPlay_GetVolume       SoundPlay_GetVolume;
 } CB_ADSPLib;
 
-
 //------------------------------------------------
 //     library.kodi.interfaces definitions
 //------------------------------------------------
@@ -461,31 +460,31 @@ typedef CB_AddOnLib* (*XBMCAddOnLib_RegisterMe)(void *addonData);
 typedef void (*XBMCAddOnLib_UnRegisterMe)(void *addonData, CB_AddOnLib *cbTable);
 typedef CB_ADSPLib* (*KODIADSPLib_RegisterMe)(void *addonData);
 typedef void (*KODIADSPLib_UnRegisterMe)(void *addonData, CB_ADSPLib *cbTable);
-typedef CB_InterfacesLib* (*KODIInterfacesLib_RegisterMe)(void *addonData);
-typedef void (*KODIInterfacesLib_UnRegisterMe)(void *addonData, CB_InterfacesLib *cbTable);
 typedef CB_CODECLib* (*XBMCCODECLib_RegisterMe)(void *addonData);
 typedef void (*XBMCCODECLib_UnRegisterMe)(void *addonData, CB_CODECLib *cbTable);
 typedef CB_GUILib* (*XBMCGUILib_RegisterMe)(void *addonData);
 typedef void (*XBMCGUILib_UnRegisterMe)(void *addonData, CB_GUILib *cbTable);
+typedef CB_InterfacesLib* (*KODIInterfacesLib_RegisterMe)(void *addonData);
+typedef void (*KODIInterfacesLib_UnRegisterMe)(void *addonData, CB_InterfacesLib *cbTable);
 typedef CB_PVRLib* (*XBMCPVRLib_RegisterMe)(void *addonData);
 typedef void (*XBMCPVRLib_UnRegisterMe)(void *addonData, CB_PVRLib *cbTable);
 
 typedef struct AddonCB
 {
-  const char                      *libBasePath;                  ///> Never, never change this!!!
-  void                            *addonData;
-  XBMCAddOnLib_RegisterMe         AddOnLib_RegisterMe;
-  XBMCAddOnLib_UnRegisterMe       AddOnLib_UnRegisterMe;
-  XBMCCODECLib_RegisterMe         CODECLib_RegisterMe;
-  XBMCCODECLib_UnRegisterMe       CODECLib_UnRegisterMe;
-  XBMCGUILib_RegisterMe           GUILib_RegisterMe;
-  XBMCGUILib_UnRegisterMe         GUILib_UnRegisterMe;
-  XBMCPVRLib_RegisterMe           PVRLib_RegisterMe;
-  XBMCPVRLib_UnRegisterMe         PVRLib_UnRegisterMe;
-  KODIADSPLib_RegisterMe          ADSPLib_RegisterMe;
-  KODIADSPLib_UnRegisterMe        ADSPLib_UnRegisterMe;
+  const char                *libBasePath;                  ///> Never, never change this!!!
+  void                      *addonData;
+  XBMCAddOnLib_RegisterMe    AddOnLib_RegisterMe;
+  XBMCAddOnLib_UnRegisterMe  AddOnLib_UnRegisterMe;
+  XBMCCODECLib_RegisterMe    CODECLib_RegisterMe;
+  XBMCCODECLib_UnRegisterMe  CODECLib_UnRegisterMe;
+  XBMCGUILib_RegisterMe      GUILib_RegisterMe;
+  XBMCGUILib_UnRegisterMe    GUILib_UnRegisterMe;
   KODIInterfacesLib_RegisterMe    InterfacesLib_RegisterMe;
   KODIInterfacesLib_UnRegisterMe  InterfacesLib_UnRegisterMe;
+  XBMCPVRLib_RegisterMe      PVRLib_RegisterMe;
+  XBMCPVRLib_UnRegisterMe    PVRLib_UnRegisterMe;
+  KODIADSPLib_RegisterMe     ADSPLib_RegisterMe;
+  KODIADSPLib_UnRegisterMe   ADSPLib_UnRegisterMe;
 } AddonCB;
 
 
@@ -495,9 +494,9 @@ namespace ADDON
 class CAddon;
 class CAddonCallbacksAddon;
 class CAddonCallbacksADSP;
-class CAddonCallbacksInterfaces;
 class CAddonCallbacksCodec;
 class CAddonCallbacksGUI;
+class CAddonCallbacksInterfaces;
 class CAddonCallbacksPVR;
 
 class CAddonCallbacks
@@ -511,31 +510,31 @@ public:
   static void AddOnLib_UnRegisterMe(void *addonData, CB_AddOnLib *cbTable);
   static CB_ADSPLib* ADSPLib_RegisterMe(void *addonData);
   static void ADSPLib_UnRegisterMe(void *addonData, CB_ADSPLib *cbTable);
-  static CB_InterfacesLib* InterfacesLib_RegisterMe(void *addonData);
-  static void InterfacesLib_UnRegisterMe(void *addonData, CB_InterfacesLib *cbTable);
   static CB_CODECLib* CODECLib_RegisterMe(void *addonData);
   static void CODECLib_UnRegisterMe(void *addonData, CB_CODECLib *cbTable);
   static CB_GUILib* GUILib_RegisterMe(void *addonData);
   static void GUILib_UnRegisterMe(void *addonData, CB_GUILib *cbTable);
+  static CB_InterfacesLib* InterfacesLib_RegisterMe(void *addonData);
+  static void InterfacesLib_UnRegisterMe(void *addonData, CB_InterfacesLib *cbTable);
   static CB_PVRLib* PVRLib_RegisterMe(void *addonData);
   static void PVRLib_UnRegisterMe(void *addonData, CB_PVRLib *cbTable);
 
   CAddonCallbacksAddon *GetHelperAddon() { return m_helperAddon; }
   CAddonCallbacksADSP *GetHelperADSP() { return m_helperADSP; }
-  CAddonCallbacksInterfaces *GetHelperInterfaces() { return m_helperInterfaces; }
   CAddonCallbacksCodec *GetHelperCodec() { return m_helperCODEC; }
   CAddonCallbacksGUI *GetHelperGUI() { return m_helperGUI; }
+  CAddonCallbacksInterfaces *GetHelperInterfaces() { return m_helperInterfaces; }
   CAddonCallbacksPVR *GetHelperPVR() { return m_helperPVR; }
 
 private:
-  AddonCB                     *m_callbacks;
-  CAddon                      *m_addon;
-  CAddonCallbacksAddon        *m_helperAddon;
-  CAddonCallbacksADSP         *m_helperADSP;
+  AddonCB             *m_callbacks;
+  CAddon              *m_addon;
+  CAddonCallbacksAddon *m_helperAddon;
+  CAddonCallbacksADSP  *m_helperADSP;
+  CAddonCallbacksCodec *m_helperCODEC;
+  CAddonCallbacksGUI   *m_helperGUI;
   CAddonCallbacksInterfaces   *m_helperInterfaces;
-  CAddonCallbacksCodec        *m_helperCODEC;
-  CAddonCallbacksGUI          *m_helperGUI;
-  CAddonCallbacksPVR          *m_helperPVR;
+  CAddonCallbacksPVR   *m_helperPVR;
 };
 
 }; /* namespace ADDON */
