@@ -90,6 +90,8 @@
 #include "cores/VideoRenderers/BaseRenderer.h"
 #include "interfaces/info/InfoExpression.h"
 
+#include "filesystem/Directory.h"
+
 #if defined(TARGET_DARWIN_OSX)
 #include "osx/smc.h"
 #include "linux/LinuxResourceCounter.h"
@@ -1041,6 +1043,7 @@ int CGUIInfoManager::TranslateSingleString(const std::string &strCondition, bool
         else if (cat == "moviesets") return LIBRARY_HAS_MOVIE_SETS;
         else if (cat == "singles") return LIBRARY_HAS_SINGLES;
         else if (cat == "compilations") return LIBRARY_HAS_COMPILATIONS;
+        else if (cat == "games") return LIBRARY_HAS_GAMES;
       }
     }
     else if (cat.name == "musicplayer")
@@ -2275,7 +2278,7 @@ bool CGUIInfoManager::GetBool(int condition1, int contextWindow, const CGUIListI
   }
   else if (condition == PLAYER_MUTED)
     bReturn = g_application.IsMuted();
-  else if (condition >= LIBRARY_HAS_MUSIC && condition <= LIBRARY_HAS_COMPILATIONS)
+  else if (condition >= LIBRARY_HAS_MUSIC && condition <= LIBRARY_HAS_GAMES)
     bReturn = GetLibraryBool(condition);
   else if (condition == LIBRARY_IS_SCANNING)
   {
@@ -4291,13 +4294,11 @@ void CGUIInfoManager::SetCurrentGame(CFileItem &item)
   CLog::Log(LOGDEBUG,"CGUIInfoManager::SetCurrentGame(%s)", item.GetPath().c_str());
   *m_currentFile = item;
 
-  m_currentFile->LoadGameTag();
-  if (m_currentFile->GetGameInfoTag()->GetTitle().empty())
+  if (m_currentFile->GetGameInfoTag()->Title().empty())
   {
     // No title in tag, show filename only
     m_currentFile->GetGameInfoTag()->SetTitle(CUtil::GetTitleFromPath(m_currentFile->GetPath()));
   }
-  m_currentFile->GetGameInfoTag()->SetLoaded(true);
 
   m_currentFile->FillInDefaultIcon();
 }
@@ -5707,6 +5708,9 @@ void CGUIInfoManager::SetLibraryBool(int condition, bool value)
     case LIBRARY_HAS_COMPILATIONS:
       m_libraryHasCompilations = value ? 1 : 0;
       break;
+    case LIBRARY_HAS_GAMES:
+      m_libraryHasGames = value ? 1 : 0;
+      break;
     default:
       break;
   }
@@ -5721,6 +5725,7 @@ void CGUIInfoManager::ResetLibraryBools()
   m_libraryHasMovieSets = -1;
   m_libraryHasSingles = -1;
   m_libraryHasCompilations = -1;
+  m_libraryHasGames = -1;
 }
 
 bool CGUIInfoManager::GetLibraryBool(int condition)
@@ -5821,6 +5826,14 @@ bool CGUIInfoManager::GetLibraryBool(int condition)
     return (GetLibraryBool(LIBRARY_HAS_MOVIES) ||
             GetLibraryBool(LIBRARY_HAS_TVSHOWS) ||
             GetLibraryBool(LIBRARY_HAS_MUSICVIDEOS));
+  }
+  else if (condition == LIBRARY_HAS_GAMES)
+  {
+    if (m_libraryHasGames < 0)
+    {
+      m_libraryHasGames = CDirectory::Exists("contentdb://game/") ? 1 : 0;
+    }
+    return m_libraryHasGames > 0;
   }
   return false;
 }
