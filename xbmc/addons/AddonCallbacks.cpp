@@ -110,32 +110,6 @@ void CAddonCallbacks::AddOnLib_UnRegisterMe(void *addonData, CB_AddOnLib *cbTabl
   addon->m_helperAddon = NULL;
 }
 
-CB_CODECLib* CAddonCallbacks::CODECLib_RegisterMe(void *addonData)
-{
-  CAddonCallbacks* addon = (CAddonCallbacks*) addonData;
-  if (addon == NULL)
-  {
-    CLog::Log(LOGERROR, "CAddonCallbacks - %s - called with a null pointer", __FUNCTION__);
-    return NULL;
-  }
-
-  addon->m_helperCODEC = new CAddonCallbacksCodec(addon->m_addon);
-  return addon->m_helperCODEC->GetCallbacks();
-}
-
-void CAddonCallbacks::CODECLib_UnRegisterMe(void *addonData, CB_CODECLib *cbTable)
-{
-  CAddonCallbacks* addon = (CAddonCallbacks*) addonData;
-  if (addon == NULL)
-  {
-    CLog::Log(LOGERROR, "CAddonCallbacks - %s - called with a null pointer", __FUNCTION__);
-    return;
-  }
-
-  delete addon->m_helperCODEC;
-  addon->m_helperCODEC = NULL;
-}
-
 CB_AudioEngineLib* CAddonCallbacks::AudioEngineLib_RegisterMe(void *addonData)
 {
   CAddonCallbacks* addon = (CAddonCallbacks*) addonData;
@@ -160,6 +134,32 @@ void CAddonCallbacks::AudioEngineLib_UnRegisterMe(void *addonData, CB_AudioEngin
 
   delete addon->m_helperAudioEngine;
   addon->m_helperAudioEngine = NULL;
+}
+
+CB_CODECLib* CAddonCallbacks::CODECLib_RegisterMe(void *addonData)
+{
+  CAddonCallbacks* addon = (CAddonCallbacks*) addonData;
+  if (addon == NULL)
+  {
+    CLog::Log(LOGERROR, "CAddonCallbacks - %s - called with a null pointer", __FUNCTION__);
+    return NULL;
+  }
+
+  addon->m_helperCODEC = new CAddonCallbacksCodec(addon->m_addon);
+  return addon->m_helperCODEC->GetCallbacks();
+}
+
+void CAddonCallbacks::CODECLib_UnRegisterMe(void *addonData, CB_CODECLib *cbTable)
+{
+  CAddonCallbacks* addon = (CAddonCallbacks*) addonData;
+  if (addon == NULL)
+  {
+    CLog::Log(LOGERROR, "CAddonCallbacks - %s - called with a null pointer", __FUNCTION__);
+    return;
+  }
+
+  delete addon->m_helperCODEC;
+  addon->m_helperCODEC = NULL;
 }
 
 CB_GUILib* CAddonCallbacks::GUILib_RegisterMe(void *addonData)
