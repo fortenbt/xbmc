@@ -3265,6 +3265,9 @@
     <ClCompile Include="..\..\xbmc\games\windows\GUIWindowGames.cpp">
       <Filter>games\windows</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\xbmc\dbwrappers\DatabaseQuerySQL.cpp">
+      <Filter>dbwrappers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\xbmc\win32\pch.h">
@@ -6328,6 +6331,9 @@
     </ClInclude>
     <ClInclude Include="..\..\xbmc\games\ControllerTypes.h">
       <Filter>games</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\dbwrappers\DatabaseQuerySQL.h">
+      <Filter>dbwrappers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
