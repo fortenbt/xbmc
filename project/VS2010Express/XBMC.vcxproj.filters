@@ -373,6 +373,9 @@
     <Filter Include="games\windows">
       <UniqueIdentifier>{b27eff5a-49e1-4e7d-b4c2-f4e46d18629a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="cores\RealtimePlayer">
+      <UniqueIdentifier>{b15b3ce9-25e8-4dc1-bf51-738d5a8e9bea}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\xbmc\win32\pch.cpp">
@@ -3250,13 +3253,7 @@
     <ClCompile Include="..\..\xbmc\cores\RetroPlayer\RetroPlayer.cpp">
       <Filter>cores\RetroPlayer</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\xbmc\cores\RetroPlayer\RetroPlayerAudio.cpp">
-      <Filter>cores\RetroPlayer</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\xbmc\cores\RetroPlayer\RetroPlayerDialogs.cpp">
-      <Filter>cores\RetroPlayer</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\xbmc\cores\RetroPlayer\RetroPlayerVideo.cpp">
       <Filter>cores\RetroPlayer</Filter>
     </ClCompile>
     <ClCompile Include="..\..\xbmc\games\windows\GUIViewStateWindowGames.cpp">
@@ -3264,6 +3261,15 @@
     </ClCompile>
     <ClCompile Include="..\..\xbmc\games\windows\GUIWindowGames.cpp">
       <Filter>games\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\cores\RealtimePlayer\RealtimePlayer.cpp">
+      <Filter>cores\RealtimePlayer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\cores\RealtimePlayer\RealtimePlayerAudio.cpp">
+      <Filter>cores\RealtimePlayer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\cores\RealtimePlayer\RealtimePlayerVideo.cpp">
+      <Filter>cores\RealtimePlayer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -6311,13 +6317,7 @@
     <ClInclude Include="..\..\xbmc\cores\RetroPlayer\RetroPlayer.h">
       <Filter>cores\RetroPlayer</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\xbmc\cores\RetroPlayer\RetroPlayerAudio.h">
-      <Filter>cores\RetroPlayer</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\xbmc\cores\RetroPlayer\RetroPlayerDialogs.h">
-      <Filter>cores\RetroPlayer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xbmc\cores\RetroPlayer\RetroPlayerVideo.h">
       <Filter>cores\RetroPlayer</Filter>
     </ClInclude>
     <ClInclude Include="..\..\xbmc\games\windows\GUIViewStateWindowGames.h">
@@ -6328,6 +6328,15 @@
     </ClInclude>
     <ClInclude Include="..\..\xbmc\games\ControllerTypes.h">
       <Filter>games</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\cores\RealtimePlayer\RealtimePlayer.h">
+      <Filter>cores\RealtimePlayer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\cores\RealtimePlayer\RealtimePlayerAudio.h">
+      <Filter>cores\RealtimePlayer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\cores\RealtimePlayer\RealtimePlayerVideo.h">
+      <Filter>cores\RealtimePlayer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
