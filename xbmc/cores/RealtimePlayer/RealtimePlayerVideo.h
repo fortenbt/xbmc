@@ -28,11 +28,11 @@
 struct DVDVideoPicture;
 struct SwsContext;
 
-class CRetroPlayerVideo : protected CThread
+class CRealtimePlayerVideo : protected CThread
 {
 public:
-  CRetroPlayerVideo(void);
-  virtual ~CRetroPlayerVideo(void) { Cleanup(); }
+  CRealtimePlayerVideo(void);
+  virtual ~CRealtimePlayerVideo(void) { Cleanup(); }
 
   void Start(double framerate);
   void Stop(void);

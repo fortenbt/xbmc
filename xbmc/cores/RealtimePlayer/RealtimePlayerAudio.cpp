@@ -18,7 +18,7 @@
  *
  */
 
-#include "RetroPlayerAudio.h"
+#include "RealtimePlayerAudio.h"
 #include "cores/AudioEngine/AEFactory.h"
 #include "cores/AudioEngine/Interfaces/AEStream.h"
 #include "utils/log.h"
@@ -27,12 +27,12 @@
 #include "dialogs/GUIDialogOK.h"
 #include "utils/StringUtils.h"
 
-CRetroPlayerAudio::CRetroPlayerAudio()
+CRealtimePlayerAudio::CRealtimePlayerAudio()
   : m_pAudioStream(NULL)
 {
 }
 
-void CRetroPlayerAudio::Cleanup()
+void CRealtimePlayerAudio::Cleanup()
 {
   if (m_pAudioStream)
   {
@@ -41,7 +41,7 @@ void CRetroPlayerAudio::Cleanup()
   }
 }
 
-bool CRetroPlayerAudio::Start(AEDataFormat format, double samplerate)
+bool CRealtimePlayerAudio::Start(AEDataFormat format, double samplerate)
 {
   if (m_pAudioStream == NULL)
   {
@@ -74,7 +74,7 @@ bool CRetroPlayerAudio::Start(AEDataFormat format, double samplerate)
   return true;
 }
 
-unsigned int CRetroPlayerAudio::AudioFrames(const uint8_t* data, unsigned int size, unsigned int frames, AEDataFormat format)
+unsigned int CRealtimePlayerAudio::AudioFrames(const uint8_t* data, unsigned int size, unsigned int frames, AEDataFormat format)
 {
   // TODO: reconfigure if format changes
 
@@ -89,17 +89,17 @@ unsigned int CRetroPlayerAudio::AudioFrames(const uint8_t* data, unsigned int si
   return framesCopied;
 }
 
-double CRetroPlayerAudio::GetDelay() const
+double CRealtimePlayerAudio::GetDelay() const
 {
   return m_pAudioStream ? m_pAudioStream->GetDelay() : 0.0;
 }
 
-unsigned int CRetroPlayerAudio::GetSampleRate() const
+unsigned int CRealtimePlayerAudio::GetSampleRate() const
 {
   return m_pAudioStream ? m_pAudioStream->GetSampleRate() : 0;
 }
 
-unsigned int CRetroPlayerAudio::FindSampleRate(double samplerate)
+unsigned int CRealtimePlayerAudio::FindSampleRate(double samplerate)
 {
   // List comes from AESinkALSA.cpp
   static unsigned int sampleRateList[] = {5512, 8000, 11025, 16000, 22050, 32000, 44100, 48000, 0};

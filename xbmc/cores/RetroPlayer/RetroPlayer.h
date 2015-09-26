@@ -19,18 +19,17 @@
  */
 #pragma once
 
-#include "RetroPlayerAudio.h"
-#include "RetroPlayerVideo.h"
-#include "cores/IPlayer.h"
+#include "cores/RealtimePlayer/RealtimePlayer.h"
 #include "FileItem.h"
 #include "games/GameTypes.h"
-#include "threads/Thread.h"
+#include "threads/CriticalSection.h"
 #include "threads/Event.h"
+#include "threads/Thread.h"
 
 #include <stdint.h>
 #include <string>
 
-class CRetroPlayer : public IPlayer, protected CThread
+class CRetroPlayer : public CRealtimePlayer, protected CThread
 {
 public:
   CRetroPlayer(IPlayerCallback& callback);
@@ -42,7 +41,6 @@ public:
   virtual bool  QueueNextFile(const CFileItem &file) { return false; }
   virtual void  OnNothingToQueueNotify() { }
   virtual bool  CloseFile(bool reopen = false);
-  virtual bool  IsPlaying() const { return !m_bStop && m_file && m_gameClient; }
   virtual bool  CanPause() { return true; }
   virtual void  Pause();
   virtual bool  IsPaused() const { return m_playSpeed == 0; }
@@ -126,10 +124,6 @@ public:
   virtual void GetAudioCapabilities(std::vector<int> &audioCaps)  { audioCaps.assign(1, IPC_AUD_ALL); }
   virtual void GetSubtitleCapabilities(std::vector<int> &subCaps) { subCaps.assign(1, IPC_SUBS_ALL); }
 
-  // Game API
-  void VideoFrame(const uint8_t* data, unsigned int size, unsigned int width, unsigned int height, AVPixelFormat format) { m_video.VideoFrame(data, size, width, height, format); }
-  void AudioFrames(const uint8_t* data, unsigned int size, unsigned int frames, AEDataFormat format) { m_audio.AudioFrames(data, size, frames, format); }
-
 protected:
   virtual void Process();
 
@@ -148,9 +142,6 @@ private:
    *         or 1.0 if no audio.
    */
   void CreateAudio(double samplerate);
-
-  CRetroPlayerVideo    m_video;
-  CRetroPlayerAudio    m_audio;
 
   CFileItemPtr         m_file;
   GAME::GameClientPtr  m_gameClient;

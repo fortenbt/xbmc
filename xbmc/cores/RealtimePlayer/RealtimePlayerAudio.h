@@ -25,11 +25,11 @@
 
 class IAEStream;
 
-class CRetroPlayerAudio
+class CRealtimePlayerAudio
 {
 public:
-  CRetroPlayerAudio(void);
-  ~CRetroPlayerAudio(void) { Cleanup(); }
+  CRealtimePlayerAudio(void);
+  ~CRealtimePlayerAudio(void) { Cleanup(); }
 
   bool Start(AEDataFormat format, double samplerate);
   void Stop(void) { Cleanup(); }

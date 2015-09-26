@@ -18,7 +18,7 @@
  *
  */
 
-#include "RetroPlayerVideo.h"
+#include "RealtimePlayerVideo.h"
 #include "cores/dvdplayer/DVDClock.h" // for DVD_NOPTS_VALUE
 #include "cores/dvdplayer/DVDCodecs/DVDCodecUtils.h"
 #include "cores/dvdplayer/DVDCodecs/Video/DVDVideoCodec.h"
@@ -33,8 +33,8 @@
 // 1 second should be a good failsafe if the event isn't triggered
 #define WAIT_TIMEOUT_MS  1000
 
-CRetroPlayerVideo::CRetroPlayerVideo(void)
-  : CThread("RetroPlayerVideo"),
+CRealtimePlayerVideo::CRealtimePlayerVideo(void)
+  : CThread("RealtimePlayerVideo"),
     m_framerate(0.0),
     m_format(AV_PIX_FMT_NONE),
     m_picture(NULL),
@@ -43,7 +43,7 @@ CRetroPlayerVideo::CRetroPlayerVideo(void)
 {
 }
 
-void CRetroPlayerVideo::Cleanup(void)
+void CRealtimePlayerVideo::Cleanup(void)
 {
   if (m_swsContext)
   {
@@ -58,7 +58,7 @@ void CRetroPlayerVideo::Cleanup(void)
   }
 }
 
-void CRetroPlayerVideo::Start(double framerate)
+void CRealtimePlayerVideo::Start(double framerate)
 {
   if (!IsRunning())
   {
@@ -67,13 +67,13 @@ void CRetroPlayerVideo::Start(double framerate)
   }
 }
 
-void CRetroPlayerVideo::Stop(void)
+void CRealtimePlayerVideo::Stop(void)
 {
   StopThread(false);
   m_frameReadyEvent.Set();
 }
 
-bool CRetroPlayerVideo::VideoFrame(const uint8_t* data, unsigned int size, unsigned int width, unsigned int height, AVPixelFormat format)
+bool CRealtimePlayerVideo::VideoFrame(const uint8_t* data, unsigned int size, unsigned int width, unsigned int height, AVPixelFormat format)
 {
   if (!m_bStop && !IsFrameReady())
   {
@@ -92,7 +92,7 @@ bool CRetroPlayerVideo::VideoFrame(const uint8_t* data, unsigned int size, unsig
   return false;
 }
 
-void CRetroPlayerVideo::Process(void)
+void CRealtimePlayerVideo::Process(void)
 {
   while (!m_bStop)
   {
@@ -128,7 +128,7 @@ void CRetroPlayerVideo::Process(void)
   Cleanup();
 }
 
-bool CRetroPlayerVideo::Configure(unsigned int width, unsigned int height, AVPixelFormat format)
+bool CRealtimePlayerVideo::Configure(unsigned int width, unsigned int height, AVPixelFormat format)
 {
   if (!g_renderManager.IsConfigured() ||
       m_format           != format    ||
@@ -140,14 +140,14 @@ bool CRetroPlayerVideo::Configure(unsigned int width, unsigned int height, AVPix
     unsigned int flags = CONF_FLAGS_YUVCOEF_BT601 | // color_matrix = 4
                          CONF_FLAGS_FULLSCREEN;      // Allow fullscreen
 
-    CLog::Log(LOGDEBUG, "RetroPlayerVideo: Change configuration: %dx%d, %4.2f fps", width, height, m_framerate);
+    CLog::Log(LOGDEBUG, "RealtimePlayerVideo: Change configuration: %dx%d, %4.2f fps", width, height, m_framerate);
 
     int orientation = 0; // (90 = 5, 180 = 2, 270 = 7), if we ever want to use RETRO_ENVIRONMENT_SET_ROTATION
 
     if (!g_renderManager.Configure(width, height, width, height, (float)m_framerate,
                                    flags, RENDER_FMT_YUV420P, 0, orientation))
     {
-      CLog::Log(LOGERROR, "RetroPlayerVideo: Failed to configure renderer");
+      CLog::Log(LOGERROR, "RealtimePlayerVideo: Failed to configure renderer");
       return false;
     }
 
@@ -176,7 +176,7 @@ bool CRetroPlayerVideo::Configure(unsigned int width, unsigned int height, AVPix
   return true;
 }
 
-void CRetroPlayerVideo::ColorspaceConversion(const uint8_t* data, unsigned int size, unsigned int width, unsigned int height, DVDVideoPicture &output)
+void CRealtimePlayerVideo::ColorspaceConversion(const uint8_t* data, unsigned int size, unsigned int width, unsigned int height, DVDVideoPicture &output)
 {
   const unsigned int stride = size / height;
 
@@ -193,13 +193,13 @@ void CRetroPlayerVideo::ColorspaceConversion(const uint8_t* data, unsigned int s
   }
 }
 
-bool CRetroPlayerVideo::IsFrameReady(void)
+bool CRealtimePlayerVideo::IsFrameReady(void)
 {
   CSingleLock lock(m_frameReadyMutex);
   return m_bFrameReady;
 }
 
-void CRetroPlayerVideo::SetFrameReady(bool bReady)
+void CRealtimePlayerVideo::SetFrameReady(bool bReady)
 {
   CSingleLock lock(m_frameReadyMutex);
 

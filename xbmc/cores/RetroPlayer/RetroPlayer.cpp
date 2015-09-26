@@ -19,9 +19,11 @@
  */
 
 #include "RetroPlayer.h"
+#include "RetroPlayerDialogs.h"
 #include "ApplicationMessenger.h"
 #include "cores/dvdplayer/DVDClock.h"
-#include "cores/RetroPlayer/RetroPlayerDialogs.h"
+#include "cores/RealtimePlayer/RealtimePlayerAudio.h"
+#include "cores/RealtimePlayer/RealtimePlayerVideo.h"
 #include "cores/VideoRenderers/RenderManager.h"
 #include "dialogs/GUIDialogOK.h"
 #include "games/addons/GameClient.h"
@@ -51,7 +53,7 @@ using namespace ADDON;
 using namespace GAME;
 
 CRetroPlayer::CRetroPlayer(IPlayerCallback& callback)
-  : IPlayer(callback),
+  : CRealtimePlayer(callback),
     CThread("RetroPlayer"),
     m_playSpeed(PLAYSPEED_NORMAL),
     m_audioSpeedFactor(0.0),
@@ -65,8 +67,8 @@ bool CRetroPlayer::OpenFile(const CFileItem& file, const CPlayerOptions& options
 
   CSingleLock lock(m_critSection);
 
-  if (IsPlaying())
-    CloseFile();
+  if (!CRealtimePlayer::OpenFile(file, options))
+    return false;
 
   PrintGameInfo(file);
 
@@ -74,12 +76,16 @@ bool CRetroPlayer::OpenFile(const CFileItem& file, const CPlayerOptions& options
   // for user input if necessary.
   GameClientPtr gameClient;
   if (!CRetroPlayerDialogs::GetGameClient(file, gameClient) || !gameClient)
+  {
+    CloseFile();
     return false;
+  }
 
   // Load the DLL and retrieve system info from the game client
   if (!gameClient->Initialize())
   {
     CLog::Log(LOGERROR, "RetroPlayer: Failed to init game client %s", gameClient->ID().c_str());
+    CloseFile();
     return false;
   }
 
@@ -91,6 +97,8 @@ bool CRetroPlayer::OpenFile(const CFileItem& file, const CPlayerOptions& options
     CLog::Log(LOGERROR, "RetroPlayer: Error opening file");
     std::string errorOpening = StringUtils::Format(g_localizeStrings.Get(13329).c_str(),
                                                    file.GetURL().GetFileNameWithoutPath().c_str());
+    CloseFile();
+    lock.Leave();
     CGUIDialogOK::ShowAndGetInput(gameClient->Name(), errorOpening, 0, 0); // Error opening %s
     return false;
   }
@@ -99,12 +107,11 @@ bool CRetroPlayer::OpenFile(const CFileItem& file, const CPlayerOptions& options
   if (gameClient->GetFrameRate() < MINIMUM_VALID_FRAMERATE || gameClient->GetFrameRate() > MAXIMUM_VALID_FRAMERATE)
   {
     CLog::Log(LOGERROR, "RetroPlayer: Game client reported invalid framerate: %f", gameClient->GetFrameRate());
+    CloseFile();
     return false;
   }
 
   m_gameClient = gameClient;
-  m_file = CFileItemPtr(new CFileItem(file));
-  m_PlayerOptions = options;
 
   // Update path if it was translated (load containing zip, or load file inside a zip)
   m_file->SetPath(m_gameClient->GetFilePath());
@@ -152,7 +159,7 @@ bool CRetroPlayer::CloseFile(bool reopen /* = false */)
 
   CSingleLock lock(m_critSection);
 
-  if (!m_file)
+  if (!IsPlaying())
     return true; // Already closed
 
   m_playSpeed = PLAYSPEED_NORMAL;
@@ -164,15 +171,13 @@ bool CRetroPlayer::CloseFile(bool reopen /* = false */)
     m_gameClient->Destroy();
   }
 
-  m_file.reset();
-
   // Set the abort request so the thread can finish up
   StopThread(false);
 
   m_pauseEvent.Set();
 
-  m_audio.Stop();
-  m_video.Stop();
+  m_audio->Stop();
+  m_video->Stop();
 
   // TODO: g_renderManager.Init() (via OpenFile()) must be called from the main
   // thread, or locking g_graphicsContext will freeze XBMC. Does g_renderManager.UnInit()
@@ -181,7 +186,8 @@ bool CRetroPlayer::CloseFile(bool reopen /* = false */)
   g_renderManager.UnInit();
 
   CLog::Log(LOGDEBUG, "RetroPlayer: File closed");
-  return true;
+
+  return CRealtimePlayer::CloseFile(reopen);
 }
 
 void CRetroPlayer::Process()
@@ -195,7 +201,7 @@ void CRetroPlayer::Process()
     CLog::Log(LOGDEBUG, "RetroPlayer: Frame rate changed from %f to %f",
       (float)(newFramerate / m_audioSpeedFactor), (float)newFramerate);
 
-  m_video.Start(newFramerate);
+  m_video->Start(newFramerate);
 
   const double frametime = 1000 * 1000 / newFramerate; // microseconds
 
@@ -252,9 +258,9 @@ void CRetroPlayer::CreateAudio(double samplerate)
   {
     // We want to sync the video clock to the audio. The creation of the audio
     // thread will return the sample rate decided by the audio stream.
-    if (m_audio.Start(AUDIO_FORMAT, samplerate))
+    if (m_audio->Start(AUDIO_FORMAT, samplerate))
     {
-      m_samplerate = m_audio.GetSampleRate();
+      m_samplerate = m_audio->GetSampleRate();
 
       CLog::Log(LOGDEBUG, "RetroPlayer: Created audio stream with sample rate %u from reported rate of %f",
         m_samplerate, (float)samplerate);
